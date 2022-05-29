@@ -14,18 +14,6 @@ const server = new ApolloServer({
   context: authMiddleware,
 });
 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
-// if we're in production, serve client/build as static assets
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../client/build')));
-}
-//app.use(routes);
-app.get('*', (_req, res) => {
-  res.sendFile(path.join(__dirname, '../client/build/index.html'));
-});
-
 const startApolloServer = async (typeDefs, resolvers) => {
   await server.start();
   server.applyMiddleware({ app });
@@ -37,6 +25,18 @@ const startApolloServer = async (typeDefs, resolvers) => {
     })
   })
   };
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+// if we're in production, serve client/build as static assets
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../client/build')));
+}
+//app.use(routes);
+app.get('*', (_req, res) => {
+  res.sendFile(path.join(__dirname, '../client/build/index.html'));
+});
   
   // Call the async function to start the server
   startApolloServer(typeDefs, resolvers);
