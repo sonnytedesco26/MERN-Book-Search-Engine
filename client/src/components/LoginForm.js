@@ -12,7 +12,7 @@ const LoginForm = () => {
   const [showAlert, setShowAlert] = useState(false);
 
 
-  const [login, {error}] = useMutation(LOGIN_USER)
+  const [loginUser, {error}] = useMutation(LOGIN_USER)
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -23,6 +23,7 @@ const LoginForm = () => {
     event.preventDefault();
 
     // check if form has everything (as per react-bootstrap docs)
+    
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.preventDefault();
@@ -30,11 +31,10 @@ const LoginForm = () => {
     }
 
     try {
-      const response = await login({
+      const {data} = await loginUser({
         variables:{...userFormData}
       })
 
-      console.log(user);
       Auth.login(data.login.token);
     } catch (err) {
       console.error(err);
